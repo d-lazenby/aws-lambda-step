@@ -84,9 +84,6 @@ def main():
             tar.extractall()
             print("Data extracted successfully")
 
-    with open("./cifar-100-python/meta", "rb") as f:
-        dataset_meta = pickle.load(f, encoding='bytes')
-
     os.makedirs('./metadata')
     ml_split = ["train", "test"]
     for split in ml_split:
