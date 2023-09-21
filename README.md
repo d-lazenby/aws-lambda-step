@@ -9,9 +9,9 @@ The project consists of the following steps.
 
 1. Data staging
 2. Model training and deployment
-3. Lambdas and step function workflow
+3. Lambdas and Step Function workflow
 4. Testing and evaluation
 
 ## Dataset
 
-We used a subset of the <a href="https://www.cs.toronto.edu/~kriz/cifar.html" target="_blank" rel="noopener">CIFAR dataset to train the model on</a>
+To train the model we used a subset of the <a href="https://www.cs.toronto.edu/~kriz/cifar.html" target="_blank" rel="noopener">CIFAR-100 dataset</a>, which is hosted by the University of Toronto (<a href="https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf" target="_blank" rel="noopener">Learning Multiple Layers of Features from Tiny Images</a>, Alex Krizhevsky, 2009). The dataset contains 100 classes containing 600 3x32x32 pixel colour images each.

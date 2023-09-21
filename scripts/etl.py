@@ -3,7 +3,10 @@ import os
 import tarfile
 import pickle
 import pandas as pd
-from typing import Dict
+import numpy as np
+import matplotlib.pyplot as plt
+
+from typing import Any, Union, List, Dict
 
 
 def extract_cifar_data(url: str, filename: str = "cifar.tar.gz") -> requests.Response:
@@ -38,6 +41,32 @@ def construct_dataframe(dataset: Dict[bytes, any]) -> pd.DataFrame:
     return df
 
 
+def save_images(dataset: Dict[str, Any], dataframe: pd.DataFrame, path: str) -> None:
+    # Grabs image data
+    for row in dataframe['row'].values:
+        img = dataset[b'data'][row]
+
+        # Stacks the data into suitable format
+        target = np.dstack((
+            img[0:1024].reshape(32, 32),
+            img[1024:2048].reshape(32, 32),
+            img[2048:].reshape(32, 32)
+        ))
+
+        # Saves the image
+        plt.imsave(path + "/" + dataframe['filenames'][row], target)
+
+
+def to_metadata_file(dataframe: pd.DataFrame, prefix: str) -> None:
+    dataframe["s3_path"] = dataframe["filenames"]
+    # Relabels bicycle as 0 and motorbike as 1 for MXNet
+    dataframe["labels"] = np.where(dataframe["labels"] == 8, 0, 1)
+    # Output result to CSV
+    dataframe[["row", "labels", "s3_path"]].to_csv(
+        f"./metadata/{prefix}.lst", sep="\t", index=False, header=False
+    )
+
+
 def main():
     # Checks if file exists in local directory and if not downloads it
     filename = "cifar.tar.gz"
@@ -58,16 +87,19 @@ def main():
     with open("./cifar-100-python/meta", "rb") as f:
         dataset_meta = pickle.load(f, encoding='bytes')
 
-    with open("./cifar-100-python/test", "rb") as f:
-        dataset_test = pickle.load(f, encoding='bytes')
+    os.makedirs('./metadata')
+    ml_split = ["train", "test"]
+    for split in ml_split:
+        with open(f"./cifar-100-python/{split}", "rb") as f:
+            dataset = pickle.load(f, encoding='bytes')
 
-    with open("./cifar-100-python/train", "rb") as f:
-        dataset_train = pickle.load(f, encoding='bytes')
-
-    df_train = construct_dataframe(dataset_train)
-
-    print(df_train.head())
-
+        # Make training directory for images
+        os.makedirs(f"./{split}")
+        # Makes dataframe and saves images
+        df = construct_dataframe(dataset)
+        save_images(dataset, df, f"./{split}")
+        # Makes metadata file for training with MXNet
+        to_metadata_file(df, split)
 
 
 if __name__ == "__main__":
