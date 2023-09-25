@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from typing import Any, Union, List, Dict
+from typing import Any, Dict
 
 
 def extract_cifar_data(url: str, filename: str = "cifar.tar.gz") -> requests.Response:
