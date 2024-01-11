@@ -12,6 +12,10 @@ The project consists of the following steps:
 3. Lambdas and Step Function workflow, and
 4. testing and evaluation.
 
+The architecture of steps 3 and 4 is illustrated below, where model deployment is carried out by the Lambda function *makeInferences*.
+
+<img src="./screenshots/architecture.jpg" width="60%"/>
+
 ## Dataset
 To train the model we used a subset of the <a href="https://www.cs.toronto.edu/~kriz/cifar.html" target="_blank" rel="noopener">CIFAR-100 dataset</a>, which is hosted by the University of Toronto (<a href="https://www.cs.toronto.edu/~kriz/learning-features-2009-TR.pdf" target="_blank" rel="noopener">Learning Multiple Layers of Features from Tiny Images</a>, Alex Krizhevsky, 2009). The dataset contains 100 classes containing 600 3x32x32 pixel colour images each. For details on data staging and processing, see `etl.py` and `data_prep.ipynb`.
 
